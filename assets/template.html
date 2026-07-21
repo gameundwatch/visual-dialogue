@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<!--
+  visual-dialogue skill: skeleton template for proposal HTML
+  ============================================================
+  Generation contract (summary of SKILL.md):
+  1. Single file, zero external dependencies (no CDN, web fonts, external images).
+  2. <body> must carry data-issue and data-round.
+  3. Each variant root carries data-variant / data-variant-label.
+  4. Meaningful UI elements carry data-ref="<variant>.<section>.<element>".
+  5. Define window.DFB_LABELS in the USER'S LANGUAGE (see the script block
+     near the end), then inline assets/feedback-layer.js verbatim after it.
+
+  LANGUAGE RULE:
+    - Machine-facing artifacts stay in English: data-* values, JSON keys,
+      code, comments in generated code.
+    - Human-facing text follows the conversation language: page copy,
+      variant names, intent/tradeoff notes, and DFB_LABELS values.
+
+  The visual design of the proposal body is free per issue. Only the
+  structural contract must hold; this template's styling is replaceable.
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal: {{ISSUE_TITLE}} (r{{ROUND}})</title>
+<style>
+  /* ===== skeleton styles (replaceable) ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: #f2f2ef;
+    color: #24262b;
+    padding-bottom: 90px; /* reserved space for the feedback toolbar — always keep this */
+  }
+
+  /* --- issue header --- */
+  .issue-header { padding: 28px 32px 20px; border-bottom: 1px solid #d8d8d2; }
+  .issue-header .meta { font-size: 12px; color: #7c7e85; letter-spacing: 0.05em; }
+  .issue-header h1 { font-size: 21px; margin-top: 6px; }
+  .issue-header .context { margin-top: 8px; font-size: 13px; color: #55575e; max-width: 68em; }
+
+  /* --- response log to previous feedback (round 2+ only) --- */
+  .response-log { margin: 20px 32px 0; padding: 14px 18px; background: #fff; border: 1px solid #d8d8d2; border-radius: 6px; }
+  .response-log h2 { font-size: 13px; color: #7c7e85; margin-bottom: 8px; }
+  .response-log li { font-size: 13px; margin: 4px 0 4px 18px; }
+  .response-log .done::marker { content: "✔ "; color: #2e7d46; }
+  .response-log .skipped::marker { content: "− "; color: #b3541e; }
+
+  /* --- side-by-side variant grid --- */
+  .variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; padding: 24px 32px; align-items: start; }
+  .variant { background: #fff; border: 1px solid #d8d8d2; border-radius: 8px; overflow: hidden; }
+  .variant-head { padding: 12px 16px; border-bottom: 1px solid #ececea; display: flex; align-items: baseline; gap: 10px; }
+  .variant-head .badge { font-weight: 800; font-size: 15px; }
+  .variant-head .name { font-size: 13px; color: #55575e; }
+  .variant-body { padding: 20px 16px; /* draw the variant mock here */ }
+  .variant-note { padding: 12px 16px; border-top: 1px dashed #ececea; font-size: 12px; line-height: 1.7; color: #55575e; }
+  .variant-note b { color: #24262b; }
+</style>
+</head>
+
+<!-- Contract: data-issue is a kebab-case issue identifier; data-round is the round number. Both always English/ASCII. -->
+<body data-issue="{{ISSUE_ID}}" data-round="{{ROUND}}">
+
+  <header class="issue-header">
+    <div class="meta">DESIGN PROPOSAL — {{ISSUE_ID}} / round {{ROUND}}</div>
+    <h1>{{ISSUE_TITLE — user's language}}</h1>
+    <p class="context">{{2–3 sentences in the user's language: background, constraints, and what decision is being asked for}}</p>
+  </header>
+
+  <!-- Round 2+ only: responses to previous notes. Delete this whole section in r1. -->
+  <section class="response-log">
+    <h2>{{"Responses to previous feedback" — user's language}}</h2>
+    <ul>
+      <li class="done">{{summary of addressed note}} → {{how it was reflected}}</li>
+      <li class="skipped">{{summary of skipped note}} → {{reason for skipping}}</li>
+    </ul>
+  </section>
+
+  <main class="variants">
+
+    <!-- Contract: variant root carries data-variant (identifier used in the JSON payload, English)
+         and data-variant-label (display name in the user's language, shown in the toolbar). -->
+    <section class="variant" data-variant="variant-a" data-variant-label="{{Option A — user's language}}">
+      <div class="variant-head">
+        <span class="badge">{{A}}</span>
+        <span class="name">{{one-line direction label}}</span>
+      </div>
+      <div class="variant-body">
+        <!--
+          Draw the variant mock here.
+          Contract: every element the user is likely to comment on gets a data-ref.
+          Naming (always English): <variant>.<section>.<element>, e.g.
+            data-ref="variant-a.header.logo"
+            data-ref="variant-a.nav.search"
+            data-ref="variant-a.footer.cta"
+        -->
+      </div>
+      <div class="variant-note">
+        <b>{{Intent label}}:</b> {{what this variant optimizes for}}<br>
+        <b>{{Tradeoff label}}:</b> {{what it sacrifices}}
+      </div>
+    </section>
+
+    <section class="variant" data-variant="variant-b" data-variant-label="{{Option B — user's language}}">
+      <div class="variant-head">
+        <span class="badge">{{B}}</span>
+        <span class="name">{{one-line direction label}}</span>
+      </div>
+      <div class="variant-body"><!-- same as above --></div>
+      <div class="variant-note">
+        <b>{{Intent label}}:</b> {{…}}<br>
+        <b>{{Tradeoff label}}:</b> {{…}}
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LOCALIZATION: translate every value below into the user's conversation language.
+       If the conversation is in English, this block may be omitted entirely.
+       Keys and the `count` function signature must not change. -->
+  <script>
+  window.DFB_LABELS = {
+    startFeedback: '{{Start feedback}}',
+    stopFeedback: '{{Stop feedback}}',
+    noteTypes: { good: '{{Good}}', change: '{{Change}}', question: '{{Question}}' },
+    notePrefix: '{{Note:}}',
+    chosenPrefix: '{{Choose:}}',
+    copy: '{{Copy}}',
+    save: '{{Save}}',
+    copied: '{{Copied. Paste it into the CLI.}}',
+    savedFile: '{{Feedback JSON downloaded.}}',
+    placeholder: '{{Write a comment…}}',
+    deleteTitle: '{{Delete}}',
+    orphan: '{{Original position could not be resolved}}',
+    count: function (n) { return '{{localized count format, e.g. n + " notes"}}'; }
+  };
+  </script>
+
+  <!-- Contract: paste the contents of assets/feedback-layer.js verbatim. Never modify it. -->
+  <script>
+  /* ===== inline feedback-layer.js here ===== */
+  </script>
+</body>
+</html>
