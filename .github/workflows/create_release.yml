@@ -2,8 +2,10 @@ name: Release
 
 # Cut a release by tagging a commit on main:
 #   git tag v0.1.0 && git push origin v0.1.0
-# This builds a clean skill archive (SKILL.md + assets/ only, per
-# .gitattributes export-ignore) and publishes it as a GitHub release.
+# This builds a clean skill archive (the visual-dialogue/ folder only)
+# and publishes it as a GitHub release. Scoping the archive to the skill
+# folder means dev/design files at the repo root are excluded by location,
+# not by a maintained blocklist.
 
 on:
     push:
@@ -20,7 +22,7 @@ jobs:
             - uses: actions/checkout@v4
 
             - name: Build clean skill archive
-              run: git archive --format=zip -o "visual-dialogue.zip" HEAD
+              run: git archive --format=zip -o "visual-dialogue.zip" HEAD visual-dialogue/
 
             - name: Create release
               env:

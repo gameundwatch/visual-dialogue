@@ -1,8 +1,0 @@
-# Keep release archives to the runtime skill only (SKILL.md + assets/).
-# Dev/design docs stay tracked in git but are excluded from `git archive`
-# and GitHub's auto-generated "Source code" release downloads.
-
-.gitattributes  export-ignore
-CONTEXT.md      export-ignore
-docs/           export-ignore
-.github/        export-ignore
